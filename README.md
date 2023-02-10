@@ -7,6 +7,6 @@ I started to develop this for learning purposes (mostly rendering and data orien
 I started this codebase a few days earlier I created this repository. However, it was structured in a OOP-like way. I'm rewritting it in the previous mentioned paradigm. If you want to check the old source, you can download it [here](https://cdn.discordapp.com/attachments/944308156182429726/1073345107413184562/src.zip).
 
 
-# ToDosstructured 
+# ToDos
 
 - Everything smh
