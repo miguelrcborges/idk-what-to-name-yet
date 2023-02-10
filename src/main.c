@@ -5,14 +5,20 @@ int main(int argc, char *argv[]) {
 	Uint64 last_count = SDL_GetPerformanceCounter();
 
 	while (1) {
+		for (int i = 0; i < 2; i++)
+			if (game.players_animation_frame[i]) 
+				game.players_animation_frame[i]--;
+
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
-			if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
+			if (e.type == SDL_QUIT)
 				goto leave;
-			//else 
-			//	Game_process_event(&game, &e);
-			
+
+			Game_process_event(&game, &e);
 		}
+
+		for (int i = 0; i < 2; i++)
+			game.players_animation_rect[i] = game.players_render_function[i](game.players_position[i], game.players_animation_frame[i], &game.window);
 
 		Game_render(&game);
 
