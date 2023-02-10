@@ -37,7 +37,7 @@ typedef struct Game {
 	char players_animation_frame[2];
 	// array buffer de ataques
 	SDL_Rect players_animation_rect[2];
-	SDL_Rect (*players_render_function[2])(const Position position, const char frame, const Window *const window);
+	SDL_Rect (*players_rect_function[2])(const Position position, const char frame, const Window *const window);
 	Window window;
 	const int frame_rate;
 } Game;
@@ -49,5 +49,9 @@ void Game_render(const Game *const game);
 void Game_destroy(Game *const game);
 
 SDL_Rect Player_idle_rect(const Position position, const char frame, const Window *const window);
+SDL_Rect Player_moving_up_rect(const Position position, const char frame, const Window *const window);
+SDL_Rect Player_moving_down_rect(const Position position, const char frame, const Window *const window);
+SDL_Rect Player_moving_left_rect(const Position position, const char frame, const Window *const window);
+SDL_Rect Player_moving_right_rect(const Position position, const char frame, const Window *const window);
 
 #endif

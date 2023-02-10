@@ -9,4 +9,13 @@ I started this codebase a few days earlier I created this repository. However, i
 
 # ToDos
 
-- Everything smh
+- [x] Player movement
+- [ ] Attacks ideas
+- [ ] Attacks processing
+- [ ] Attacks rendering
+- [ ] Costumization at runtime instead of compile time
+- [ ] SFX
+
+### Maybe ToDos
+- [ ] Networking
+- [ ] Game main menu (doesn't jump directly to the game)
