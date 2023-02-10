@@ -103,26 +103,24 @@ void Game_destroy(Game *const game) {
 void Game_process_event(Game *const game, const SDL_Event *const e) {
 	if (e->type != SDL_KEYDOWN || e->key.repeat) return;
 	for (int i = 0; i < 2; i++) {
+		if (game->players_animation_frame[i]) return;
+
 		if (e->key.keysym.sym == game->players_binds[i].up) {
-			if (game->players_animation_frame[i]) return;
 			game->players_position[i].y--;
 			if (game->players_position[i].y < 0) game->players_position[i].y = 0;
 			game->players_animation_frame[i] = PLAYER_MOVE_FRAMES;
 
 		} else if (e->key.keysym.sym == game->players_binds[i].down) {
-			if (game->players_animation_frame[i]) return;
 			game->players_position[i].y++;
 			if (game->players_position[i].y > 3) game->players_position[i].y = 3;
 			game->players_animation_frame[i] = PLAYER_MOVE_FRAMES;
 
 		} else if (e->key.keysym.sym == game->players_binds[i].left) {
-			if (game->players_animation_frame[i]) return;
 			game->players_position[i].x--;
 			if (game->players_position[i].x < 4 * i) game->players_position[i].x = 4 * i;
 			game->players_animation_frame[i] = PLAYER_MOVE_FRAMES;
 
 		} else if (e->key.keysym.sym == game->players_binds[i].right) {
-			if (game->players_animation_frame[i]) return;
 			game->players_position[i].x++;
 			if (game->players_position[i].x > 4 * i + 3) game->players_position[i].x = 4 * i + 3;
 			game->players_animation_frame[i] = PLAYER_MOVE_FRAMES;
