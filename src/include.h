@@ -41,7 +41,11 @@ typedef struct Game {
 	const int frame_rate;
 } Game;
 
+
+#define GAME_BACKGROUND_COLOR 0x16, 0x16, 0x16, 0xFF
 Game Game_create(const int argc, char *const *const argv);
+void Game_process_event(Game *const game, const SDL_Event *const e);
+void Game_render(const Game *const game);
 void Game_destroy(Game *const game);
 
 #endif

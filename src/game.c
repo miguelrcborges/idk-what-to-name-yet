@@ -95,3 +95,10 @@ void Game_destroy(Game *const game) {
 	SDL_DestroyWindow(game->window.window);
 	SDL_Quit();
 }
+
+void Game_render(const Game *const game) {
+	SDL_SetRenderDrawColor(game->window.renderer, GAME_BACKGROUND_COLOR);
+	SDL_RenderClear(game->window.renderer);
+
+	SDL_RenderPresent(game->window.renderer);
+}
