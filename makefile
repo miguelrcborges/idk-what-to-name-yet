@@ -4,14 +4,12 @@ UNAME_S := $(shell uname -s)
 CFLAGS = -O2 -ftree-vectorize -fno-semantic-interposition -pipe -s -flto
 WARNINGS = -Wall -Wextra -Wwrite-strings
 
-ifeq ($(UNAME_S),Linux)
-	LINKS = -lSDL2main -lSDL2
-endif
-
 ifeq ($(OS),Windows_NT)
 	LINKS = -Lwindows/lib -lmingw32 -lSDL2main -lSDL2	
 	INCLUDES = -Iwindows/include
 	DISABLE_CONSOLE = -mwindows
+else
+	LINKS = -lSDL2main -lSDL2
 endif
 
 RELEASE = $(CFLAGS) $(WARNINGS) $(LINKS) $(INCLUDES) $(DISABLE_CONSOLE)
