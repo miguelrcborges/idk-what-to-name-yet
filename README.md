@@ -34,7 +34,7 @@ Make sure that the SDL2.dll is in the same directory as the compiled binary.
 - [ ] Game main menu (doesn't jump directly to the game)
 
 
-# Possible optimizations that should be consider
+# Possible optimizations that should be considered
 
 Not sure if these will increase performance. It would be required doing afterbenchmarks after doing the implementation.
 
