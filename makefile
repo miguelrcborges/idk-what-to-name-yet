@@ -8,6 +8,7 @@ ifeq ($(OS),Windows_NT)
 	LINKS = -Lwindows/lib -lmingw32 -lSDL2main -lSDL2	
 	INCLUDES = -Iwindows/include
 	DISABLE_CONSOLE = -mwindows
+	DYN_EXC = bin/SDL2.dll
 else
 	LINKS = -lSDL2main -lSDL2
 endif
@@ -21,15 +22,17 @@ OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 OUTPUT = bin/release
 DEBUG_OUTPUT = bin/debug
 
-debug: $(DEBUG_OUTPUT)
-release: $(OUTPUT)
-
+debug: $(DEBUG_OUTPUT) $(DYN_EXC)
+release: $(OUTPUT) $(DYN_EXC)
 
 $(OUTPUT): $(SRC)
 	$(CC) $^ -o $@ $(RELEASE)
 
 $(DEBUG_OUTPUT): $(OBJ)
 	$(CC) $^ -o $@ $(DEBUG)
+
+$(DYN_EXC):
+	cp windows/bin/SDL2.dll bin/
 
 obj/%.o: src/%.c
 	$(CC) $^ -c -o $@ $(DEBUG)

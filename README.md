@@ -8,7 +8,7 @@ I started this codebase a few days earlier I created this repository. However, i
 
 # Building
 
-Create a folder named bin and run make.
+Run ```make release```.
 
 When compiling this, make sure you have SDL2 (and SDL2-dev if the previous package doesn't ship the development libraries on your distro).
 The makefile on the repository should work across all systems (assuming MingW64 on Windows). 
