@@ -3,6 +3,8 @@ UNAME_S := $(shell uname -s)
 
 CFLAGS = -O2 -ftree-vectorize -fno-semantic-interposition -pipe -s -flto
 WARNINGS = -Wall -Wextra -Wwrite-strings
+OBJDIR = obj
+BINDIR = bin
 
 ifeq ($(OS),Windows_NT)
 	LINKS = -Lwindows/lib -lmingw32 -lSDL2main -lSDL2	
@@ -16,14 +18,22 @@ endif
 RELEASE = $(CFLAGS) $(WARNINGS) $(LINKS) $(INCLUDES) $(DISABLE_CONSOLE)
 DEBUG = $(WARNINGS) $(LINKS) $(INCLUDES) -g
 
+.PHONY: debug release run
+
 SRC = $(wildcard src/*.c)
 OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 
 OUTPUT = bin/release
 DEBUG_OUTPUT = bin/debug
 
-debug: $(DEBUG_OUTPUT) $(DYN_EXC)
-release: $(OUTPUT) $(DYN_EXC)
+debug: $(OBJDIR) $(BINDIR) $(DEBUG_OUTPUT) $(DYN_EXC)
+release: $(BINDIR) $(OUTPUT) $(DYN_EXC)
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(BINDIR):
+	mkdir -p $(BINDIR)
 
 $(OUTPUT): $(SRC)
 	$(CC) $^ -o $@ $(RELEASE)
