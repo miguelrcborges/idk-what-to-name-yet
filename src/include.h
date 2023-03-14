@@ -4,31 +4,22 @@
 #include "config.h"
 
 typedef struct Position {
-	signed char x;
-	signed char y;
+	signed char x, y;
 } Position;
 
 typedef struct Size {
-	const int width;
-	const int height;
+	const int width, height;
 } Size;
 
 typedef struct Window {
 	SDL_Window *const window;
 	SDL_Renderer *const renderer;
-	const Size window_size;
-	const Size window_padding;
-	const int tile_side;
-	const int tile_gap;
-	const int player_margin;
-	const int player_side;
+	const Size window_size, window_padding;
+	const int tile_side, title_gap, player_margin, player_side;
 } Window;
 
 typedef struct Hotkeys {
-	const SDL_Keycode up;
-	const SDL_Keycode down;
-	const SDL_Keycode left;
-	const SDL_Keycode right;
+	const SDL_Keycode up, down, left, right;
 } Hotkeys;
 
 typedef struct Animation {
@@ -36,13 +27,13 @@ typedef struct Animation {
 } Animation;
 
 typedef struct Game {
-	const Hotkeys players_binds[2];
-	Position players_position[2];
-	Animation players_animations[2];
+	const Hotkeys players_binds[2];      /* 32 bytes */
+	Position players_position[2];        /* 4  bytes */	
+	Animation players_animations[2];     /* 4  bytes */
 	// array buffer de ataques
-	SDL_Rect players_animation_rect[2];
-	Window window;
-	const int frame_rate;
+	const int frame_rate;                /* 4  bytes */
+	SDL_Rect players_animation_rect[2];  /* 32 bytes */
+	Window window;                       /* 96 bytes */
 } Game;
 
 Game Game_create(const int argc, char **argv);
