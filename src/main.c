@@ -6,10 +6,10 @@ int main(int argc, char *argv[]) {
 
 	while (1) {
 		for (int i = 0; i < 2; i++)
-			if (game.players_animation_frame[i]) {
-				game.players_animation_frame[i]--;
-				if (!game.players_animation_frame[i])
-					game.players_rect_function[i] = Player_idle_rect;
+			if (game.players_animations[i].frame) {
+				game.players_animations[i].frame--;
+				if (!game.players_animations[i].frame)
+					game.players_animations[i].frame = PLAYER_IDLE;
 			}
 
 		SDL_Event e;
@@ -21,7 +21,8 @@ int main(int argc, char *argv[]) {
 		}
 
 		for (int i = 0; i < 2; i++)
-			game.players_animation_rect[i] = game.players_rect_function[i](game.players_position[i], game.players_animation_frame[i], &game.window);
+			game.players_animation_rect[i] = Player_get_rect_wrapper(game.players_animations[i],
+					game.players_position[i], &game.window);
 
 		Game_render(&game);
 

@@ -4,8 +4,8 @@
 #include "config.h"
 
 typedef struct Position {
-	char x;
-	char y;
+	signed char x;
+	signed char y;
 } Position;
 
 typedef struct Size {
@@ -31,27 +31,37 @@ typedef struct Hotkeys {
 	const SDL_Keycode right;
 } Hotkeys;
 
+typedef struct Animation {
+	unsigned char animation, frame;
+} Animation;
+
 typedef struct Game {
-	Position players_position[2];
 	const Hotkeys players_binds[2];
-	char players_animation_frame[2];
+	Position players_position[2];
+	Animation players_animations[2];
 	// array buffer de ataques
 	SDL_Rect players_animation_rect[2];
-	SDL_Rect (*players_rect_function[2])(const Position position, const char frame, const Window *const window);
 	Window window;
 	const int frame_rate;
 } Game;
 
-
-Game Game_create(const int argc, char *const *const argv);
+Game Game_create(const int argc, char **argv);
 void Game_process_event(Game *const game, const SDL_Event *const e);
 void Game_render(const Game *const game);
 void Game_destroy(Game *const game);
 
-SDL_Rect Player_idle_rect(const Position position, const char frame, const Window *const window);
-SDL_Rect Player_moving_up_rect(const Position position, const char frame, const Window *const window);
-SDL_Rect Player_moving_down_rect(const Position position, const char frame, const Window *const window);
-SDL_Rect Player_moving_left_rect(const Position position, const char frame, const Window *const window);
-SDL_Rect Player_moving_right_rect(const Position position, const char frame, const Window *const window);
+#define PLAYER_IDLE         0
+#define PLAYER_MOVE_UP      1
+#define PLAYER_MOVE_DOWN    2
+#define PLAYER_MOVE_RIGHT   3
+#define PLAYER_MOVE_LEFT    4
+
+SDL_Rect Player_idle_rect(Position position, const Window *window);
+SDL_Rect Player_moving_up_rect(Position position, char frame, const Window *window);
+SDL_Rect Player_moving_down_rect(Position position, char frame, const Window *window);
+SDL_Rect Player_moving_left_rect(Position position, char frame, const Window *window);
+SDL_Rect Player_moving_right_rect(Position position, char frame, const Window *window);
+SDL_Rect Player_get_rect_wrapper(Animation animation, Position position,
+			const Window *window);
 
 #endif
