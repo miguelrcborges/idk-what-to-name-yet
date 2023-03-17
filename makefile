@@ -36,7 +36,7 @@ $(DYN_EXC):
 	cp windows/bin/SDL2.dll bin/
 
 obj/%.o: src/%.c
-	$(CC) $^ -c -o $@ $(DEBUG) $/sdl2-config --cflags)
+	$(CC) $^ -c -o $@ $(DEBUG) $(sdl2-config --cflags)
 
 run: debug 
 	$(DEBUG_OUTPUT)
