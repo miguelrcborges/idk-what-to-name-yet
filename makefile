@@ -15,8 +15,8 @@ OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 OUTPUT = bin/release
 DEBUG_OUTPUT = bin/debug
 
-debug: $(OBJDIR) $(BINDIR) $(DEBUG_OUTPUT) $(DYN_EXC)
-release: $(BINDIR) $(OUTPUT) $(DYN_EXC)
+debug: $(OBJDIR) $(BINDIR) $(DEBUG_OUTPUT)
+release: $(BINDIR) $(OUTPUT)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -25,16 +25,13 @@ $(BINDIR):
 	mkdir -p $(BINDIR)
 
 $(OUTPUT): $(SRC)
-	$(CC) $^ -o $@ $(RELEASE) $(shell sdl2-config --libs --cflags)
+	$(CC) $^ -o $@ $(RELEASE) $$(sdl2-config --libs --cflags)
 
 $(DEBUG_OUTPUT): $(OBJ)
-	$(CC) $^ -o $@ $(DEBUG) $(shell sdl2-config --libs)
+	$(CC) $^ -o $@ $(DEBUG) $$(sdl2-config --libs)
 
 obj/%.o: src/%.c
-	$(CC) $^ -c -o $@ $(DEBUG) $(shell sdl2-config --cflags)
+	$(CC) $^ -c -o $@ $(DEBUG) $$(sdl2-config --cflags)
 
 run: debug 
 	$(DEBUG_OUTPUT)
-
-test:
-	echo $(echo a)
