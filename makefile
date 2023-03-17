@@ -6,17 +6,8 @@ WARNINGS = -Wall -Wextra -Wwrite-strings
 OBJDIR = obj
 BINDIR = bin
 
-ifeq ($(OS),Windows_NT)
-	LINKS = -Lwindows/lib -lmingw32 -lSDL2main -lSDL2	
-	INCLUDES = -Iwindows/include
-	DISABLE_CONSOLE = -mwindows
-	DYN_EXC = bin/SDL2.dll
-else
-	LINKS = -lSDL2main -lSDL2
-endif
-
-RELEASE = $(CFLAGS) $(WARNINGS) $(LINKS) $(INCLUDES) $(DISABLE_CONSOLE)
-DEBUG = $(WARNINGS) $(LINKS) $(INCLUDES) -g
+RELEASE = $(CFLAGS) $(WARNINGS)
+DEBUG = $(WARNINGS) -Og -g
 
 .PHONY: debug release run
 
@@ -36,16 +27,16 @@ $(BINDIR):
 	mkdir -p $(BINDIR)
 
 $(OUTPUT): $(SRC)
-	$(CC) $^ -o $@ $(RELEASE)
+	$(CC) $^ -o $@ $(RELEASE) $(sdl2-config --libs)
 
 $(DEBUG_OUTPUT): $(OBJ)
-	$(CC) $^ -o $@ $(DEBUG)
+	$(CC) $^ -o $@ $(DEBUG) $(sdl2-config --libs)
 
 $(DYN_EXC):
 	cp windows/bin/SDL2.dll bin/
 
 obj/%.o: src/%.c
-	$(CC) $^ -c -o $@ $(DEBUG)
+	$(CC) $^ -c -o $@ $(DEBUG) $/sdl2-config --cflags)
 
 run: debug 
 	$(DEBUG_OUTPUT)

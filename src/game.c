@@ -4,7 +4,7 @@ Game Game_create(int argc, char **argv) {
 	char fullscreen = 1, vsync = 0;
 	int height = 0, width = 0;
 	int window_flags = SDL_WINDOW_SHOWN;
-	int renderer_flags = SDL_RENDERER_ACCELERATED;
+	int renderer_flags = 0;
 
 	for (int i = 0; i < argc; i++) {
 		if (!strcmp(argv[i], "-w")) {
