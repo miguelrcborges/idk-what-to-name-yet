@@ -1,6 +1,4 @@
 CC = gcc
-UNAME_S := $(shell uname -s)
-
 CFLAGS = -O2 -ftree-vectorize -fno-semantic-interposition -pipe -s -flto
 WARNINGS = -Wall -Wextra -Wwrite-strings
 OBJDIR = obj
@@ -27,16 +25,16 @@ $(BINDIR):
 	mkdir -p $(BINDIR)
 
 $(OUTPUT): $(SRC)
-	$(CC) $^ -o $@ $(RELEASE) $(sdl2-config --libs)
+	$(CC) $^ -o $@ $(RELEASE) $(shell sdl2-config --libs --cflags)
 
 $(DEBUG_OUTPUT): $(OBJ)
-	$(CC) $^ -o $@ $(DEBUG) $(sdl2-config --libs)
-
-$(DYN_EXC):
-	cp windows/bin/SDL2.dll bin/
+	$(CC) $^ -o $@ $(DEBUG) $(shell sdl2-config --libs)
 
 obj/%.o: src/%.c
-	$(CC) $^ -c -o $@ $(DEBUG) $(sdl2-config --cflags)
+	$(CC) $^ -c -o $@ $(DEBUG) $(shell sdl2-config --cflags)
 
 run: debug 
 	$(DEBUG_OUTPUT)
+
+test:
+	echo $(echo a)

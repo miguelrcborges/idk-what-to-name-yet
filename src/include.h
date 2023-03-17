@@ -15,7 +15,7 @@ typedef struct Window {
 	SDL_Window *const window;
 	SDL_Renderer *const renderer;
 	const Size window_size, window_padding;
-	const int tile_side, title_gap, player_margin, player_side;
+	const int tile_side, tile_gap, player_margin, player_side;
 } Window;
 
 typedef struct Hotkeys {
