@@ -5,6 +5,7 @@
 #include <SDL_video.h>
 
 #include "exitcodes.h"
+#include "scenes.h"
 
 #define STRFY(x) #x
 #define AT " in " __FILE__ ":" STRFY(__LINE__)
@@ -41,7 +42,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	SDL_CreateWindow(
+	SDL_Window *win = SDL_CreateWindow(
 		"idk what to name yet",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
@@ -49,8 +50,37 @@ int main(int argc, char *argv[]) {
 		height,
 		winflags
 	);
+	if (win == NULL) {
+		SDL_Log("Error " AT ": %s", SDL_GetError());
+		SDL_Quit();
+		return SDL_WINDOW_CREATION_ERROR;
+	}
 
+	SDL_Renderer *ren = SDL_CreateRenderer(win, -1, renflags);
+	if (ren == NULL) {
+		SDL_Log("Error " AT ": %s", SDL_GetError());
+		SDL_DestroyWindow(win);
+		return SDL_RENDERER_CREATION_ERROR;
+	}
+
+	enum SCENE current = MAIN_MENU;
+
+	while (1) {
+		switch (current) {
+		case QUIT:
+			goto close;
+		case MAIN_MENU:
+			break;
+		case IN_GAME: 
+			break;
+		default:
+			__builtin_unreachable();
+		}
+	}
+
+close:
+	SDL_DestroyRenderer(ren);
+	SDL_DestroyWindow(win);
 	SDL_Quit();
-
 	return 0;
 }
