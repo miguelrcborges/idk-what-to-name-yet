@@ -1,38 +1,56 @@
-#include "include.h"
+#include <SDL.h>
+#include <SDL_error.h>
+#include <SDL_stdinc.h>
+#include <SDL_render.h>
+#include <SDL_video.h>
+
+#include "exitcodes.h"
+
+#define STRFY(x) #x
+#define AT " in " __FILE__ ":" STRFY(__LINE__)
 
 int main(int argc, char *argv[]) {
-	Game game = Game_create(argc, argv);
-	Uint64 last_count = SDL_GetPerformanceCounter();
-
-	while (1) {
-		for (int i = 0; i < 2; i++)
-			if (game.players_animations[i].frame) {
-				game.players_animations[i].frame--;
-				if (!game.players_animations[i].frame)
-					game.players_animations[i].frame = PLAYER_IDLE;
-			}
-
-		SDL_Event e;
-		while (SDL_PollEvent(&e)) {
-			if (e.type == SDL_QUIT)
-				goto leave;
-
-			Game_process_event(&game, &e);
-		}
-
-		for (int i = 0; i < 2; i++)
-			game.players_animation_rect[i] = Player_get_rect_wrapper(game.players_animations[i],
-					game.players_position[i], &game.window);
-
-		Game_render(&game);
-
-		const Uint64 current_count = SDL_GetPerformanceCounter();
-		const Uint64 elapsed_time = (current_count - last_count) / SDL_GetPerformanceFrequency() * 1000;
-		SDL_Delay(1000 / game.frame_rate - elapsed_time);
-		last_count = current_count;
+	if (SDL_Init(SDL_INIT_VIDEO)) {
+		SDL_Log("Error " AT ": %s", SDL_GetError());
+		return SDL_INIT_ERROR;
 	}
 
-leave:
-	Game_destroy(&game);
+	Uint32 winflags = SDL_WINDOW_FULLSCREEN_DESKTOP;
+	Uint32 renflags = SDL_RENDERER_PRESENTVSYNC;
+	int width = 1600, height = 900;
+
+	for (int i = 1; i < argc; i++) {
+		if (SDL_strcmp(argv[i], "-w") == 0 || SDL_strcmp(argv[i], "--windowed") == 0) {
+			winflags &= UINT32_MAX ^ SDL_WINDOW_FULLSCREEN_DESKTOP;
+		} else if (SDL_strcmp(argv[i], "-f") == 0 || SDL_strcmp(argv[i], "--fullscreen") == 0) {
+			winflags |= SDL_WINDOW_FULLSCREEN;
+		} else if (SDL_strcmp(argv[i], "-v") == 0 || SDL_strcmp(argv[i], "--vsync") == 0) {
+			renflags |= SDL_RENDERER_PRESENTVSYNC;
+		} else if (SDL_strcmp(argv[i], "-nv") == 0 || SDL_strcmp(argv[i], "--no-vsync") == 0) {
+			renflags &= UINT32_MAX ^ SDL_RENDERER_PRESENTVSYNC;
+		} else if (SDL_strcmp(argv[i], "-w") == 0 || SDL_strcmp(argv[i], "--width") == 0) {
+			if (i + i < argc) {
+				++i;
+				width = SDL_atoi(argv[i]);
+			}
+		} else if (SDL_strcmp(argv[i], "-h") == 0 || SDL_strcmp(argv[i], "--height") == 0) {
+			if (i + i < argc) {
+				++i;
+				height = SDL_atoi(argv[i]);
+			}
+		}
+	}
+
+	SDL_CreateWindow(
+		"idk what to name yet",
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		width,
+		height,
+		winflags
+	);
+
+	SDL_Quit();
+
 	return 0;
 }
