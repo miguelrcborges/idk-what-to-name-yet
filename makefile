@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -O2 -ftree-vectorize -fno-semantic-interposition -pipe -s -flto
+LINKS = -lSDL2 -lSDL2_ttf
 WARNINGS = -Wall -Wextra -Wwrite-strings
 OBJDIR = obj
 BINDIR = bin
@@ -25,13 +26,13 @@ $(BINDIR):
 	mkdir -p $(BINDIR)
 
 $(OUTPUT): $(SRC)
-	$(CC) $^ -o $@ $(RELEASE) $(shell sdl2-config --libs --cflags)
+	$(CC) $^ -o $@ $(RELEASE) $(LINKS)
 
 $(DEBUG_OUTPUT): $(OBJ)
-	$(CC) $^ -o $@ $(DEBUG) $(shell sdl2-config --libs)
+	$(CC) $^ -o $@ $(DEBUG) $(LINKS)
 
 obj/%.o: src/%.c
-	$(CC) $^ -c -o $@ $(DEBUG) $(shell sdl2-config --cflags)
+	$(CC) $^ -c -o $@ $(DEBUG)
 
 run: debug 
 	$(DEBUG_OUTPUT)

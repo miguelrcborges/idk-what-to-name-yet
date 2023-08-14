@@ -1,11 +1,12 @@
-#include <SDL.h>
-#include <SDL_error.h>
-#include <SDL_stdinc.h>
-#include <SDL_render.h>
-#include <SDL_video.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_error.h>
+#include <SDL2/SDL_stdinc.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
 
 #include "exitcodes.h"
 #include "scenes.h"
+#include "mainMenu.h"
 
 #define STRFY(x) #x
 #define AT " in " __FILE__ ":" STRFY(__LINE__)
@@ -21,7 +22,7 @@ int main(int argc, char *argv[]) {
 	int width = 1600, height = 900;
 
 	for (int i = 1; i < argc; i++) {
-		if (SDL_strcmp(argv[i], "-w") == 0 || SDL_strcmp(argv[i], "--windowed") == 0) {
+		if (SDL_strcmp(argv[i], "-win") == 0 || SDL_strcmp(argv[i], "--windowed") == 0) {
 			winflags &= UINT32_MAX ^ SDL_WINDOW_FULLSCREEN_DESKTOP;
 		} else if (SDL_strcmp(argv[i], "-f") == 0 || SDL_strcmp(argv[i], "--fullscreen") == 0) {
 			winflags |= SDL_WINDOW_FULLSCREEN;
@@ -63,13 +64,14 @@ int main(int argc, char *argv[]) {
 		return SDL_RENDERER_CREATION_ERROR;
 	}
 
-	enum SCENE current = MAIN_MENU;
+	enum SCENE current_scene = MAIN_MENU;
 
 	while (1) {
-		switch (current) {
+		switch (current_scene) {
 		case QUIT:
 			goto close;
 		case MAIN_MENU:
+			current_scene = mainMenu(win, ren);
 			break;
 		case IN_GAME: 
 			break;
