@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -O2 -ftree-vectorize -fno-semantic-interposition -pipe -s -flto
-LINKS = -lSDL2 -lSDL2_ttf
+LINKS = -lSDL2
 WARNINGS = -Wall -Wextra -Wwrite-strings
 OBJDIR = obj
 BINDIR = bin
