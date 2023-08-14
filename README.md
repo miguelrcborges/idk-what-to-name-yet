@@ -16,6 +16,8 @@ When compiling this, make sure you have SDL2 and SDL2_TTF installed
 (and their development versions if the previous packages don't ship the
 development libraries on your distro).
 
+On windows, use MSYS2 to get an adequate building enviroment.
+
 
 # ToDos
 
