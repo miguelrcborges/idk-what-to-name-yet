@@ -2,19 +2,39 @@
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_stdinc.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_video.h>
 
+#include <SDL2/SDL_ttf.h>
+
+#define MAIN
+#include "globals.h"
 #include "exitcodes.h"
 #include "scenes.h"
 #include "mainMenu.h"
 
 #define STRFY(x) #x
-#define AT " in " __FILE__ ":" STRFY(__LINE__)
+#define STRFYCON(x) STRFY(x)
+#define AT " in " __FILE__ ":" STRFYCON(__LINE__)
+
+SDL_Texture *makeTextTexture(SDL_Renderer *ren, TTF_Font *f, const char *t, SDL_Color c) {
+	SDL_Surface *tmp = TTF_RenderText_Solid(f, t, c);
+	if (tmp == NULL) {
+		return NULL;
+	}
+	SDL_Texture *r = SDL_CreateTextureFromSurface(ren, tmp);
+	SDL_FreeSurface(tmp);
+	return r; 
+}
 
 int main(int argc, char *argv[]) {
 	if (SDL_Init(SDL_INIT_VIDEO)) {
-		SDL_Log("Error " AT ": %s", SDL_GetError());
+		SDL_Log("Error" AT ": %s", SDL_GetError());
 		return SDL_INIT_ERROR;
+	}
+	if (TTF_Init()) {
+		SDL_Log("Error" AT ": %s", SDL_GetError());
+		return TTF_INI_ERROR;
 	}
 
 	Uint32 winflags = SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -54,6 +74,7 @@ int main(int argc, char *argv[]) {
 	if (win == NULL) {
 		SDL_Log("Error " AT ": %s", SDL_GetError());
 		SDL_Quit();
+		TTF_Quit();
 		return SDL_WINDOW_CREATION_ERROR;
 	}
 
@@ -61,7 +82,34 @@ int main(int argc, char *argv[]) {
 	if (ren == NULL) {
 		SDL_Log("Error " AT ": %s", SDL_GetError());
 		SDL_DestroyWindow(win);
+		SDL_Quit();
+		TTF_Quit();
 		return SDL_RENDERER_CREATION_ERROR;
+	}
+
+	jb_pt128 = TTF_OpenFont("assets/JetBrainsMono-Medium.ttf", 512);
+	if (jb_pt128 == NULL) {
+		SDL_Log("Error" AT ": %s", SDL_GetError());
+		goto close;
+	}
+
+	SDL_Color text_color = { 0xda, 0xda, 0xda, 0xff };
+	local_tx = makeTextTexture(ren, jb_pt128, "Local", text_color);
+	if (local_tx == NULL) {
+		SDL_Log("Error" AT ": %s", SDL_GetError());
+		goto close;
+	}
+
+	online_tx = makeTextTexture(ren, jb_pt128, "Online", text_color);
+	if (online_tx == NULL) {
+		SDL_Log("Error" AT ": %s", SDL_GetError());
+		goto close;
+	}
+
+	options_tx = makeTextTexture(ren, jb_pt128, "Options", text_color);
+	if (options_tx == NULL) {
+		SDL_Log("Error" AT ": %s", SDL_GetError());
+		goto close;
 	}
 
 	enum SCENE current_scene = MAIN_MENU;
@@ -84,5 +132,6 @@ close:
 	SDL_DestroyRenderer(ren);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
+	TTF_Quit();
 	return 0;
 }

@@ -1,12 +1,12 @@
 CC = clang
-CFLAGS = -O2 -ftree-vectorize -fno-semantic-interposition -pipe -s -flto $$(sdl2-config --cflags)
-LINKS = $$(sdl2-config --libs)
+RELEASE = -O2 -ftree-vectorize -fno-semantic-interposition -pipe -s -flto 
+CFLAGS = $$(pkg-config sdl2 SDL2_ttf --cflags)
+LINKS = $$(pkg-config sdl2 SDL2_ttf --libs)
 WARNINGS = -Wall -Wextra -Wwrite-strings
+DEBUG = $(WARNINGS) -Og -g
 OBJDIR = obj
 BINDIR = bin
 
-RELEASE = $(CFLAGS) $(WARNINGS)
-DEBUG = $(WARNINGS) -Og -g
 
 .PHONY: debug release run clean
 
@@ -16,8 +16,8 @@ OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 OUTPUT = bin/release
 DEBUG_OUTPUT = bin/debug
 
-debug: $(OBJDIR) $(BINDIR) $(DEBUG_OUTPUT) $(DYN_EXC)
-release: $(BINDIR) $(OUTPUT) $(DYN_EXC)
+debug: $(OBJDIR) $(BINDIR) $(DEBUG_OUTPUT)
+release: $(BINDIR) $(OUTPUT)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -26,19 +26,19 @@ $(BINDIR):
 	mkdir -p $(BINDIR)
 
 $(OUTPUT): $(SRC)
-	$(CC) $^ -o $@ $(RELEASE) $(LINKS)
+	$(CC) $^ -o $@ $(RELEASE) $(CFLAGS) $(LINKS)
 
 $(DEBUG_OUTPUT): $(OBJ)
 	$(CC) $^ -o $@ $(DEBUG) $(LINKS)
 
 obj/%.o: src/%.c
-	$(CC) $^ -c -o $@ $(DEBUG)
+	$(CC) $^ -c -o $@ $(DEBUG) $(CFLAGS)
 
 run: debug 
-	$(DEBUG_OUTPUT)
+	cd bin && ./debug
 
 test:
 	echo $(echo a)
 
 clean:
-	rm -rf obj bin
+	rm -rf obj bin/release bin/debug

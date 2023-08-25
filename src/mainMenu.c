@@ -4,8 +4,11 @@
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_keycode.h>
 
+#include <SDL2/SDL_ttf.h>
+
 #include "mainMenu.h"
 #include "scenes.h"
+#include "globals.h"
 
 enum MAIN_MENU_CONSTANTS {
 	MAIN_MENU_FRAME_RATE = 30,
@@ -66,8 +69,9 @@ int mainMenu(SDL_Window *win, SDL_Renderer *ren) {
 		int ww, wh;
 		SDL_Rect r;
 		SDL_GetWindowSize(win, &ww, &wh);
-		r.w = ww / 2;
 		r.h = wh / 10;
+		// r.w = ww / 2;
+		r.w = r.h * 5 / 2;
 		for (int i = 0; i < NUMBER_OF_OPTIONS; ++i) {
 			if (option == i) {
 				SDL_SetRenderDrawColor(
@@ -88,7 +92,8 @@ int mainMenu(SDL_Window *win, SDL_Renderer *ren) {
 			}
 			r.x = ww / 4;
 			r.y = i * (r.h + 50) + wh / 2;
-			SDL_RenderFillRect(ren, &r);
+			// SDL_RenderFillRect(ren, &r);
+			SDL_RenderCopy(ren, local_tx, NULL, &r);
 		}
 
 		SDL_RenderPresent(ren);
